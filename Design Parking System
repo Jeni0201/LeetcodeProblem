@@ -1,0 +1,29 @@
+public class ParkingSystem {
+    private int big_slots;
+    private int medium_slots;
+    private int small_slots;
+
+    // Constructor to initialize available slots
+    public ParkingSystem(int big, int medium, int small) {
+        this.big_slots = big;
+        this.medium_slots = medium;
+        this.small_slots = small;
+    }
+
+    // Method to add a car to the parking lot
+    public boolean addCar(int carType) {
+        // Car type 1: big, 2: medium, 3: small
+        if (carType == 1 && big_slots > 0) {
+            big_slots--;
+            return true;
+        } else if (carType == 2 && medium_slots > 0) {
+            medium_slots--;
+            return true;
+        } else if (carType == 3 && small_slots > 0) {
+            small_slots--;
+            return true;
+        } else {
+            return false; // No space available
+        }
+    }
+}
