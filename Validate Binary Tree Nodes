@@ -1,0 +1,57 @@
+
+bool validateBinaryTreeNodes(int n, int* leftChild, int leftChildSize, int* rightChild, int rightChildSize) {
+    int* parentCount = (int*)calloc(n, sizeof(int));
+    
+    // 1. Count parents for each node
+    for (int i = 0; i < n; i++) {
+        if (leftChild[i] != -1) {
+            if (++parentCount[leftChild[i]] > 1) return false; // Multiple parents
+        }
+        if (rightChild[i] != -1) {
+            if (++parentCount[rightChild[i]] > 1) return false; // Multiple parents
+        }
+    }
+
+    // 2. Find the unique root (node with 0 parents)
+    int root = -1;
+    for (int i = 0; i < n; i++) {
+        if (parentCount[i] == 0) {
+            if (root != -1) return false; // More than one root found
+            root = i;
+        }
+    }
+    if (root == -1) return false; // No root found (cycle involving all nodes)
+
+    // 3. BFS/Traversal to check if all nodes are reachable from the root
+    int* queue = (int*)malloc(n * sizeof(int));
+    bool* visited = (bool*)calloc(n, sizeof(bool));
+    int head = 0, tail = 0;
+
+    queue[tail++] = root;
+    visited[root] = true;
+    int visitedCount = 0;
+
+    while (head < tail) {
+        int curr = queue[head++];
+        visitedCount++;
+
+        int children[2] = {leftChild[curr], rightChild[curr]};
+        for (int i = 0; i < 2; i++) {
+            int child = children[i];
+            if (child != -1) {
+                // If we hit an already visited node, there's a cycle
+                if (visited[child]) return false; 
+                visited[child] = true;
+                queue[tail++] = child;
+            }
+        }
+    }
+
+    // Clean up memory
+    free(parentCount);
+    free(queue);
+    free(visited);
+
+    // 4. Check if all nodes were reached
+    return visitedCount == n;
+}
