@@ -1,0 +1,16 @@
+import java.util.Arrays;
+
+class Solution {
+    public double trimMean(int[] arr) {
+        Arrays.sort(arr);
+        int k = arr.length / 20; 
+        int start = k;
+        int end = arr.length - k;
+        double count = end - start;     
+        double sum = 0;
+        for (int i = start; i < end; i++) {
+            sum += arr[i];
+        }
+        return sum / count;
+    }
+}
